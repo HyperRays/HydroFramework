@@ -1,0 +1,3 @@
+*.txt
+simulation_outputs
+__pycache__

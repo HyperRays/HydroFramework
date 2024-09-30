@@ -110,6 +110,16 @@ def sedov_taylor_blast(res):
 
     return cfg, target_time
 
+def range_incl(start,stop,step):
+    n = start
+
+    while n < stop-1:
+        yield n
+        n += step
+    
+    if n != stop-1:
+        yield stop-1
+
 def main():
     # Output directory
     output_dir = "simulation_outputs"
@@ -128,15 +138,15 @@ def main():
     min_depth = 1
 
     start_depth = 5
-    end_depth = 9
+    end_depth = 8
     step = 64
 
     # Resolutions for StdRes
-    std_resolutions = range(2**start_depth, 2**end_depth, step)  # from 64 to 2048 in steps of 64
+    std_resolutions =  range_incl(2**start_depth, 2**end_depth+1, step)
     # std_resolutions = range(0) # no iter
 
     # Resolutions for Quadtree (powers of 2)
-    quadtree_resolutions = [2**i for i in range(start_depth, end_depth)]  # 2^6 to 2^11 (64 to 2048)
+    quadtree_resolutions = [2**i for i in range(start_depth, end_depth+1)]
 
     # Initialize lists to store profiling times
     std_times = []
