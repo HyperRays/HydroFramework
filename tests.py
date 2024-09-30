@@ -138,7 +138,7 @@ def main():
     min_depth = 1
 
     start_depth = 5
-    end_depth = 8
+    end_depth = 9
     step = 64
 
     # Resolutions for StdRes
