@@ -146,9 +146,10 @@ def main():
     end_depth = 13
     step = 64
     step2 = 256
+    step3 = 1024
 
     # Resolutions for StdRes
-    std_resolutions =  list(range(2**start_depth, 2**8+1, step)) +  list(range_incl(2**8, 2**end_depth+1, step2))
+    std_resolutions =  list(range(2**start_depth, 2**8+1, step)) +  list(range(2**8, 2**11+1, step2)) + list(range_incl(2**11, 2**end_depth+1, step3))
     # std_resolutions = range(0) # no iter
 
     # Resolutions for Quadtree (powers of 2)
