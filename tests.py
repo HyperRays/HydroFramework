@@ -117,8 +117,7 @@ def range_incl(start,stop,step):
         yield n
         n += step
     
-    if n != stop-1:
-        yield stop-1
+    yield stop-1
 
 def main():
     # Output directory
@@ -137,9 +136,9 @@ def main():
     width, height = 1, 1  # dimensions of entire area
     min_depth = 1
 
-    start_depth = 5
-    end_depth = 9
-    step = 64
+    start_depth = 10
+    end_depth = 11
+    step = 256
 
     # Resolutions for StdRes
     std_resolutions =  range_incl(2**start_depth, 2**end_depth+1, step)
@@ -173,7 +172,7 @@ def main():
         profile_filename = path.join(output_dir, f"stdres_res{res}_profile.prof")
         with Profile() as profile:
             # Run simulation
-            all_states, all_times = simulation.run(target_time, checkpoint_freq=200, verbose=True)
+            all_states, all_times = simulation.run(target_time, checkpoint_freq=500, verbose=True)
             profile.dump_stats(profile_filename)
             stats = Stats(profile)
             total_time = stats.total_tt
@@ -216,7 +215,7 @@ def main():
         profile_filename = path.join(output_dir, f"quadtree_res{res}_profile.prof")
         with Profile() as profile:
             # Run simulation
-            all_states, all_times = simulation.run(target_time, checkpoint_freq=200, verbose=True)
+            all_states, all_times = simulation.run(target_time, checkpoint_freq=500, verbose=True)
             profile.dump_stats(profile_filename)
             stats = Stats(profile)
             total_time = stats.total_tt
