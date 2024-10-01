@@ -143,7 +143,7 @@ def main():
     min_depth = 1
 
     start_depth = 5
-    end_depth = 11
+    end_depth = 13
     step = 64
     step2 = 256
 
