@@ -24,8 +24,14 @@ from gen_quadtree import (
 def depth_formula(x, y, max_depth, min_depth, center_x=0.5, center_y=0.5):
     # default is proximity to center
     dist_to_center = ((x - center_x) ** 2 + (y - center_y) ** 2) ** 0.5
-    if dist_to_center <= 0.5:
+    if dist_to_center <= 0.2:
+        return max(max_depth-3, 5)
+    if dist_to_center <= 0.3:
+        return max(max_depth-1, 5)
+    elif dist_to_center <= 0.45:
         return max_depth
+    elif dist_to_center <= 0.5:
+        return max(max_depth-3, 5)
     else: 
         return min_depth
 
@@ -136,16 +142,21 @@ def main():
     width, height = 1, 1  # dimensions of entire area
     min_depth = 1
 
-    start_depth = 10
+    start_depth = 5
     end_depth = 11
-    step = 256
+    step = 64
+    step2 = 256
 
     # Resolutions for StdRes
-    std_resolutions =  range_incl(2**start_depth, 2**end_depth+1, step)
+    std_resolutions =  list(range(2**start_depth, 2**8+1, step)) +  list(range_incl(2**8, 2**end_depth+1, step2))
     # std_resolutions = range(0) # no iter
 
     # Resolutions for Quadtree (powers of 2)
     quadtree_resolutions = [2**i for i in range(start_depth, end_depth+1)]
+    # quadtree_resolutions = range(0) # no iter
+
+    do_no_iter = False
+
 
     # Initialize lists to store profiling times
     std_times = []
@@ -172,7 +183,7 @@ def main():
         profile_filename = path.join(output_dir, f"stdres_res{res}_profile.prof")
         with Profile() as profile:
             # Run simulation
-            all_states, all_times = simulation.run(target_time, checkpoint_freq=500, verbose=True)
+            all_states, all_times = simulation.run(target_time, checkpoint_freq=200, verbose=True, no_iter=do_no_iter)
             profile.dump_stats(profile_filename)
             stats = Stats(profile)
             total_time = stats.total_tt
@@ -202,12 +213,15 @@ def main():
         logging.info(f"Running Quadtree simulation at resolution {res}")
         max_resolution = res
         # Generate Quadtree
-        gen_quadtree(width, height, min_depth, int(np.log2(max_resolution)), max_resolution)
+        qtd_dir = f"Qtdata_res{res}"
+        if not os.path.exists(qtd_dir):
+            os.makedirs(qtd_dir)
+        gen_quadtree(width, height, min_depth, int(np.log2(max_resolution)), max_resolution, files=qtd_dir)
 
         cfg, target_time = sedov_taylor_blast((max_resolution, max_resolution))
 
         # Setup space
-        space = Quadtree(cfg)
+        space = Quadtree(cfg, file_path=qtd_dir)
 
         # Initial variables
         simulation = Simulation(space)
@@ -215,7 +229,7 @@ def main():
         profile_filename = path.join(output_dir, f"quadtree_res{res}_profile.prof")
         with Profile() as profile:
             # Run simulation
-            all_states, all_times = simulation.run(target_time, checkpoint_freq=500, verbose=True)
+            all_states, all_times = simulation.run(target_time, checkpoint_freq=200, verbose=True, no_iter=do_no_iter)
             profile.dump_stats(profile_filename)
             stats = Stats(profile)
             total_time = stats.total_tt
@@ -237,7 +251,7 @@ def main():
 
     # Save profiling times
     profiling_times_file = path.join(output_dir, "profiling_times.npz")
-    np.savez_compressed(profiling_times_file, std_times=std_times, quadtree_times=quadtree_times)
+    np.savez_compressed(profiling_times_file, std_res=std_resolutions, std_times=std_times, quadtree_res=quadtree_resolutions, quadtree_times=quadtree_times)
     logging.info(f"Profiling times saved to {profiling_times_file}")
 
 if __name__ == "__main__":

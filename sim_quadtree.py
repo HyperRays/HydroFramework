@@ -83,22 +83,36 @@ class Quadtree(Space):
         return values
 
     
-    def data_in_dir(self, data, dir): 
-        
-        if len(self.store["virtual"]) == 0:
-            precomp_sum = np.array([0])
-        else:
-            precomp_sum = np.array([np.einsum('ij->i',data[:,v]) for v in self.store["virtual"]]).T
-        
+    def data_in_dir(self, data, dir):
         n = self.neighbors[dir]
-        conv = 4**(np.abs(self.store["depth"]-self.store["depth"][n]))
+        data_out = np.empty((4, n.shape[0]))
 
-        data = np.select(
-            [n < 0, n >= 0],
-            [precomp_sum[:,np.maximum(-n-1,0)],data[:,n]/conv]
-        )
-        
-        return data
+        mask_n_ge_0 = n >= 0
+        mask_n_lt_0 = n < 0
+
+        if np.any(mask_n_ge_0):
+            n_ge_0 = n[mask_n_ge_0]
+            depth_self = self.store["depth"][mask_n_ge_0]
+            depth_neighbor = self.store["depth"][n_ge_0]
+            conv = 4 ** np.abs(depth_self - depth_neighbor)
+            data_out[:, mask_n_ge_0] = data[:, n_ge_0] / conv
+
+        if np.any(mask_n_lt_0):
+            indices = np.maximum(-n[mask_n_lt_0] - 1, 0)
+            if len(self.store["virtual"]) == 0:
+                data_out[:, mask_n_lt_0] = 0
+            else:
+                unique_indices, inverse_indices = np.unique(indices, return_inverse=True)
+                precomp_sums = np.empty((4, len(unique_indices)))
+
+                for idx, virtual_idx in enumerate(unique_indices):
+                    v = self.store["virtual"][virtual_idx]
+                    precomp_sums[:, idx] = np.sum(data[:, v], axis=1)
+
+                data_out[:, mask_n_lt_0] = precomp_sums[:, inverse_indices]
+
+        return data_out
+
     
     def to_grid(self, U):
         maxd = np.max(self.store["depth"])
