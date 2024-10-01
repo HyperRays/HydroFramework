@@ -184,7 +184,7 @@ def main():
         profile_filename = path.join(output_dir, f"stdres_res{res}_profile.prof")
         with Profile() as profile:
             # Run simulation
-            all_states, all_times = simulation.run(target_time, checkpoint_freq=200, verbose=True, no_iter=do_no_iter)
+            all_states, all_times = simulation.run(target_time, checkpoint_freq=500, verbose=True, no_iter=do_no_iter)
             profile.dump_stats(profile_filename)
             stats = Stats(profile)
             total_time = stats.total_tt
@@ -230,7 +230,7 @@ def main():
         profile_filename = path.join(output_dir, f"quadtree_res{res}_profile.prof")
         with Profile() as profile:
             # Run simulation
-            all_states, all_times = simulation.run(target_time, checkpoint_freq=200, verbose=True, no_iter=do_no_iter)
+            all_states, all_times = simulation.run(target_time, checkpoint_freq=500, verbose=True, no_iter=do_no_iter)
             profile.dump_stats(profile_filename)
             stats = Stats(profile)
             total_time = stats.total_tt
