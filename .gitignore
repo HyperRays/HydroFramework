@@ -1,4 +1,9 @@
 *.txt
 simulation_outputs
 __pycache__
-simout.zip
+*.zip
+*.7z
+*.npz
+*.prof
+*.log
+saves

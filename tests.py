@@ -365,30 +365,33 @@ def main():
     std_resolutions = sorted(list(set(list(range_incl(2**start_depth, 2**end_depth+1, step)) + [2**i for i in range(start_depth, end_depth+1)])))
     quadtree_resolutions = [2**i for i in range(start_depth, end_depth+1)]
 
+    if not os.path.exists("tests"):
+        os.makedirs("tests")
+        print(f"Created output directory: tests")
 
     combinations = [
         # folder, space-type, resolutions, tvd/no-tvd, test, depth_func
         ## Blast
         ### STDRES
-        ["std_blast_no_tvd", "std", std_resolutions, False, "blast", None],
-        ["std_blast_tvd", "std", std_resolutions, True, "blast", None],
+        ["tests/std_blast_no_tvd", "std", std_resolutions, False, "blast", None],
+        ["tests/std_blast_tvd", "std", std_resolutions, True, "blast", None],
         ### QUAD
-        ["quad_blast_no_tvd", "quad", quadtree_resolutions, False, "blast", depth_formula_sedov],
-        ["quad_blast_tvd", "quad", quadtree_resolutions, True, "blast", depth_formula_sedov],
+        ["tests/quad_blast_no_tvd", "quad", quadtree_resolutions, False, "blast", depth_formula_sedov],
+        ["tests/quad_blast_tvd", "quad", quadtree_resolutions, True, "blast", depth_formula_sedov],
 
         ## Tube
         ### STDRES
-        ["std_tube_no_tvd", "std", std_resolutions, False, "tube", None],
-        ["std_tube_tvd", "std", std_resolutions, True, "tube", None],
+        ["tests/std_tube_no_tvd", "std", std_resolutions, False, "tube", None],
+        ["tests/std_tube_tvd", "std", std_resolutions, True, "tube", None],
         ### QUAD: proper
-        ["quad_tube_no_tvd_proper", "quad", quadtree_resolutions, False, "tube", depth_formula_sod],
-        ["quad_tube_tvd_proper", "quad", quadtree_resolutions, True, "tube", depth_formula_sod],
+        ["tests/quad_tube_no_tvd_proper", "quad", quadtree_resolutions, False, "tube", depth_formula_sod],
+        ["tests/quad_tube_tvd_proper", "quad", quadtree_resolutions, True, "tube", depth_formula_sod],
         ### QUAD: faulty1
-        ["quad_tube_no_tvd_faulty1", "quad", quadtree_resolutions, False, "tube", faulty1],
-        ["quad_tube_tvd_faulty1", "quad", quadtree_resolutions, True, "tube", faulty1],
+        ["tests/quad_tube_no_tvd_faulty1", "quad", quadtree_resolutions, False, "tube", faulty1],
+        ["tests/quad_tube_tvd_faulty1", "quad", quadtree_resolutions, True, "tube", faulty1],
         ### QUAD: faulty2
-        ["quad_tube_no_tvd_faulty2", "quad", quadtree_resolutions, False, "tube", faulty2],
-        ["quad_tube_tvd_faulty2", "quad", quadtree_resolutions, True, "tube", faulty2],
+        ["tests/quad_tube_no_tvd_faulty2", "quad", quadtree_resolutions, False, "tube", faulty2],
+        ["tests/quad_tube_tvd_faulty2", "quad", quadtree_resolutions, True, "tube", faulty2],
     ]
 
     for (folder, space_type, resolutions, tvd, test, depth_func) in combinations:

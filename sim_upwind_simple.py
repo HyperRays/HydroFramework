@@ -127,9 +127,16 @@ class Simulation:
 
         return cfl.max(), valid_dt.min()
 
-    def run(self, target_time, start_time=0, checkpoint_freq=1, verbose=True, no_iter=False):
-        
+    def run(self, target_time, start_time=0, checkpoint_freq=1, verbose=True, no_iter=False, auto_count=50):
+
         logger = logging.getLogger(__name__)
+
+        if checkpoint_freq == "auto":
+            _,dt = self.compute_cfl(self.U)
+            iterc = target_time/dt
+            checkpoint_freq = max(int(iterc/auto_count),1)
+
+            logger.info(f"Set checkpoint frequency to {checkpoint_freq}")
 
         # Adjust start time if any
 
