@@ -92,5 +92,8 @@ class StdRes(Space):
 
         return tmp
 
-    def data_in_dir(self, data, dir):
-        return data.T[self.neighbors[dir]].T
+    def data_in_dir(self, data, dir, dist=1):
+        n = self.neighbors[dir]
+        for _ in range(dist-1):
+            n = self.neighbors[dir][n]
+        return data.T[n].T
