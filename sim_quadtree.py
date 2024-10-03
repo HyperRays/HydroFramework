@@ -83,7 +83,7 @@ class Quadtree(Space):
         return values
 
     
-    def data_in_dir(self, data, dir):
+    def data_in_dir(self, data, dir, dist=1):
         n = self.neighbors[dir]
         data_out = np.empty((4, n.shape[0]))
 
@@ -98,7 +98,7 @@ class Quadtree(Space):
             data_out[:, mask_n_ge_0] = data[:, n_ge_0] / conv
 
         if np.any(mask_n_lt_0):
-            indices = np.maximum(-n[mask_n_lt_0] - 1, 0)
+            indices = -n[mask_n_lt_0] - 1
             if len(self.store["virtual"]) == 0:
                 data_out[:, mask_n_lt_0] = 0
             else:
