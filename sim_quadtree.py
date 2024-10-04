@@ -4,14 +4,16 @@ from config import Config
 from os import path
 from space import Space
 from quadtree_helper import read_boundaries_from_file,read_nodes_from_file,read_sqmatrix_from_file
+import torch
 
 class Quadtree(Space):
     """
     Quadtree dynamic resolution space
     """
 
-    def setup(self, cfg: Config, file_path=None):
+    def setup(self, cfg: Config, file_path=None, use_torch=True):
         
+        self.uses_torch = use_torch
         store = dict()
 
         if file_path is None:
@@ -49,6 +51,20 @@ class Quadtree(Space):
         dx = np.array([cfg.vol[0]/(2**store["depth"]),cfg.vol[1]/(2**store["depth"])])
         
 
+        if use_torch:
+            device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+            self.data_in_dir = self._data_in_dir_torch
+            neighbors = [torch.from_numpy(n).long().to(device) for n in neighbors]
+
+            # Convert store depth to PyTorch tensor
+            store["depth"] = torch.from_numpy(store["depth"]).long().to(device)
+            
+            # Convert store virtual to list of PyTorch tensors
+            store["virtual"] = [torch.from_numpy(v).long().to(device) for v in store["virtual"]]
+
+        else:
+            self.data_in_dir = self._data_in_dir_numpy
+
         return neighbors, boundary, dx, store
     
     def external_setup(self, cfg):
@@ -83,7 +99,7 @@ class Quadtree(Space):
         return values
 
     
-    def data_in_dir(self, data, dir, dist=1):
+    def _data_in_dir_numpy(self, data, dir, dist=1):
         n = self.neighbors[dir]
         data_out = np.empty((4, n.shape[0]))
 
@@ -113,9 +129,43 @@ class Quadtree(Space):
 
         return data_out
 
+    def _data_in_dir_torch(self, data, dir, dist=1):
+        n = self.neighbors[dir]
+        data_out = torch.empty((4, n.shape[0]), dtype=data.dtype, device=data.device)
+
+        mask_n_ge_0 = n >= 0
+        mask_n_lt_0 = n < 0
+
+        if torch.any(mask_n_ge_0):
+            n_ge_0 = n[mask_n_ge_0]
+            depth_self = self.store["depth"][mask_n_ge_0]
+            depth_neighbor = self.store["depth"][n_ge_0]
+            conv = 4 ** torch.abs(depth_self - depth_neighbor)
+            data_out[:, mask_n_ge_0] = data[:, n_ge_0] / conv
+
+        if torch.any(mask_n_lt_0):
+            indices = -n[mask_n_lt_0] - 1
+            if len(self.store["virtual"]) == 0:
+                data_out[:, mask_n_lt_0] = 0
+            else:
+                unique_indices, inverse_indices = torch.unique(indices, return_inverse=True)
+                precomp_sums = torch.empty((4, len(unique_indices)), dtype=data.dtype, device=data.device)
+
+                unique_indices_list = unique_indices.tolist()
+                for idx, virtual_idx in enumerate(unique_indices_list):
+                    v = self.store["virtual"][virtual_idx]
+                    precomp_sums[:, idx] = torch.sum(data[:, v], dim=1)
+
+                data_out[:, mask_n_lt_0] = precomp_sums[:, inverse_indices]
+
+        return data_out
+
     
     def to_grid(self, U):
-        maxd = np.max(self.store["depth"])
+        if self.uses_torch:
+            maxd = np.max(self.store["depth"].cpu().numpy())
+        else:
+            maxd = np.max(self.store["depth"])
         idx = self.store["sqmatrix_map"]
         tmp = U[:, idx]/4**(maxd-self.store["depth"][idx])
         return tmp

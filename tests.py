@@ -18,6 +18,13 @@ from sim_grid import StdRes
 from sim_upwind_simple import Simulation as no_tvd_simulation
 from sim_upwind_tvd import Simulation as tvd_simulation
 
+from sim_upwind_simple_torch import Simulation as no_tvd_simulation_torch
+from sim_upwind_tvd_torch import Simulation as tvd_simulation_torch
+
+import torch
+
+torch.set_num_threads(24)
+
 from gen_quadtree import (
     Tree,
     write_nodes_to_file,
@@ -246,7 +253,7 @@ def range_incl(start,stop,step):
     
     yield stop-1
 
-def run_std_res_tests(simulationf, resolutions, output_dir, do_no_iter, test, std_times):
+def run_std_res_tests(simulationf, resolutions, output_dir, do_no_iter, test, std_times, use_torch):
 
     # Run simulations for StdRes
     logging.info("Starting simulations for StdRes")
@@ -259,7 +266,7 @@ def run_std_res_tests(simulationf, resolutions, output_dir, do_no_iter, test, st
         cfg, target_time = test((res, res))
 
         # Setup space
-        space = StdRes(cfg)
+        space = StdRes(cfg, use_torch=use_torch)
 
         # Initial variables
         simulation = simulationf(space)
@@ -267,7 +274,7 @@ def run_std_res_tests(simulationf, resolutions, output_dir, do_no_iter, test, st
         profile_filename = path.join(output_dir, f"stdres_res{res}_profile.prof")
         with Profile() as profile:
             # Run simulation
-            all_states, all_times = simulation.run(target_time, checkpoint_freq="auto", verbose=True, no_iter=do_no_iter)
+            all_states, all_times = simulation.run(target_time, checkpoint_freq=500, verbose=True, no_iter=do_no_iter)
             profile.dump_stats(profile_filename)
             stats = Stats(profile)
             total_time = stats.total_tt
@@ -287,7 +294,7 @@ def run_std_res_tests(simulationf, resolutions, output_dir, do_no_iter, test, st
         with open(f"{output_dir}/sim_info.txt","a") as f:
             f.write(f"{res} {total_time}\n")
 
-def run_quad_res_tests(simulationf, resolutions, output_dir, do_no_iter, test, width, height, min_depth, quadtree_times, depth_func):
+def run_quad_res_tests(simulationf, resolutions, output_dir, do_no_iter, test, width, height, min_depth, quadtree_times, depth_func, use_torch):
     # Run simulations for Quadtree
     logging.info("Starting simulations for Quadtree")
 
@@ -306,7 +313,7 @@ def run_quad_res_tests(simulationf, resolutions, output_dir, do_no_iter, test, w
         cfg, target_time = test((max_resolution, max_resolution))
 
         # Setup space
-        space = Quadtree(cfg, file_path=qtd_dir)
+        space = Quadtree(cfg, file_path=qtd_dir, use_torch=use_torch)
 
         # Initial variables
         simulation = simulationf(space)
@@ -314,7 +321,7 @@ def run_quad_res_tests(simulationf, resolutions, output_dir, do_no_iter, test, w
         profile_filename = path.join(output_dir, f"quadtree_res{res}_profile.prof")
         with Profile() as profile:
             # Run simulation
-            all_states, all_times = simulation.run(target_time, checkpoint_freq="auto", verbose=True, no_iter=do_no_iter)
+            all_states, all_times = simulation.run(target_time, checkpoint_freq=500, verbose=True, no_iter=do_no_iter)
             profile.dump_stats(profile_filename)
             stats = Stats(profile)
             total_time = stats.total_tt
@@ -360,41 +367,46 @@ def main():
     end_depth = 9
     step = 64
 
-    do_no_iter = True
+    do_no_iter = False
 
-    std_resolutions = sorted(list(set(list(range_incl(2**start_depth, 2**end_depth+1, step)) + [2**i for i in range(start_depth, end_depth+1)])))
+    std_resolutions = [2**i for i in range(start_depth, end_depth+1)]
     quadtree_resolutions = [2**i for i in range(start_depth, end_depth+1)]
+    
+    # std_resolutions = [128]
+    # quadtree_resolutions = [128]
+    
 
     if not os.path.exists("tests"):
         os.makedirs("tests")
         print(f"Created output directory: tests")
 
     combinations = [
-        # folder, space-type, resolutions, tvd/no-tvd, test, depth_func
+        # folder, space-type, resolutions, tvd/no-tvd, test, depth_func, torch
         ## Blast
         ### STDRES
-        ["tests/std_blast_no_tvd", "std", std_resolutions, False, "blast", None],
-        ["tests/std_blast_tvd", "std", std_resolutions, True, "blast", None],
+        # ["tests/std_blast_no_tvd", "std", std_resolutions, False, "blast", None, False],
+        ["tests/std_blast_tvd", "std", std_resolutions, True, "blast", None, False],
         ### QUAD
-        ["tests/quad_blast_no_tvd", "quad", quadtree_resolutions, False, "blast", depth_formula_sedov],
-        ["tests/quad_blast_tvd", "quad", quadtree_resolutions, True, "blast", depth_formula_sedov],
+        # ["tests/quad_blast_no_tvd", "quad", quadtree_resolutions, False, "blast", depth_formula_sedov, False],
+        # ["tests/quad_blast_tvd", "quad", quadtree_resolutions, True, "blast", depth_formula_sedov, False],
 
         ## Tube
         ### STDRES
-        ["tests/std_tube_no_tvd", "std", std_resolutions, False, "tube", None],
-        ["tests/std_tube_tvd", "std", std_resolutions, True, "tube", None],
+        # ["tests/std_tube_no_tvd", "std", std_resolutions, False, "tube", None, False],
+        # ["tests/std_tube_tvd", "std", std_resolutions, True, "tube", None, False],
         ### QUAD: proper
-        ["tests/quad_tube_no_tvd_proper", "quad", quadtree_resolutions, False, "tube", depth_formula_sod],
-        ["tests/quad_tube_tvd_proper", "quad", quadtree_resolutions, True, "tube", depth_formula_sod],
+        # ["tests/quad_tube_no_tvd_proper", "quad", quadtree_resolutions, False, "tube", depth_formula_sod, False],
+        # ["tests/quad_tube_tvd_proper", "quad", quadtree_resolutions, True, "tube", depth_formula_sod, False],
         ### QUAD: faulty1
-        ["tests/quad_tube_no_tvd_faulty1", "quad", quadtree_resolutions, False, "tube", faulty1],
-        ["tests/quad_tube_tvd_faulty1", "quad", quadtree_resolutions, True, "tube", faulty1],
+        # ["tests/quad_tube_no_tvd_faulty1", "quad", quadtree_resolutions, False, "tube", faulty1, False],
+        # ["tests/quad_tube_tvd_faulty1", "quad", quadtree_resolutions, True, "tube", faulty1, False],
         ### QUAD: faulty2
-        ["tests/quad_tube_no_tvd_faulty2", "quad", quadtree_resolutions, False, "tube", faulty2],
-        ["tests/quad_tube_tvd_faulty2", "quad", quadtree_resolutions, True, "tube", faulty2],
+        # ["tests/quad_tube_no_tvd_faulty2", "quad", quadtree_resolutions, False, "tube", faulty2, False],
+        # ["tests/quad_tube_tvd_faulty2", "quad", quadtree_resolutions, True, "tube", faulty2, False],
     ]
 
-    for (folder, space_type, resolutions, tvd, test, depth_func) in combinations:
+
+    for (folder, space_type, resolutions, tvd, test, depth_func, use_torch) in combinations:
         
         # Output directory
         output_dir = folder
@@ -406,28 +418,36 @@ def main():
         times = []
         log_text = ""
 
-        if test == "sod":
+        if test == "tube":
             testf = sod_shock_tube
             log_text += " Test: sod "
         elif test == "blast":
             testf = sedov_taylor_blast
             log_text += " Test: blast "
 
-        if tvd:
-            simulationf = tvd_simulation
-            log_text += " TVD: True "
+        if use_torch:
+            if tvd:
+                simulationf = tvd_simulation_torch
+                log_text += " TVD: True "
+            else:
+                simulationf = no_tvd_simulation_torch
+                log_text += " TVD: False "
         else:
-            simulationf = no_tvd_simulation
-            log_text += " TVD: False "
+            if tvd:
+                simulationf = tvd_simulation
+                log_text += " TVD: True "
+            else:
+                simulationf = no_tvd_simulation
+                log_text += " TVD: False "
 
         if space_type == "std":
             runf_space = run_std_res_tests
-            args = (simulationf, resolutions, output_dir, do_no_iter, testf, times)
+            args = (simulationf, resolutions, output_dir, do_no_iter, testf, times, use_torch)
             log_text += " Space: Grid "
 
         elif space_type == "quad":
             runf_space = run_quad_res_tests
-            args = (simulationf, resolutions, output_dir, do_no_iter, sod_shock_tube, width, height, min_depth, times, depth_func)
+            args = (simulationf, resolutions, output_dir, do_no_iter, testf, width, height, min_depth, times, depth_func, use_torch)
             log_text += " Space: Quadtree "
 
 

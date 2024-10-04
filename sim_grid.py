@@ -2,14 +2,16 @@
 from config import Config
 import numpy as np
 from space import Space
+import torch
 
 class StdRes(Space):
     """
     Homogenous resolution space
     """
 
-    def setup(self, cfg: Config):
+    def setup(self, cfg: Config, use_torch=True):
 
+        self.uses_torch = use_torch
         arraylen = cfg.steps[0] * cfg.steps[1]
 
         neighbors = np.array(
@@ -55,6 +57,12 @@ class StdRes(Space):
         boundary = np.array([self.coordinate_to_index(cfg, *v) for v in boundary])
         store = {"arraylen": arraylen}
 
+        if use_torch:
+            self.data_in_dir = self._data_in_dir_torch
+            neighbors = [torch.from_numpy(n).long() for n in neighbors]
+        else:
+            self.data_in_dir = self._data_in_dir_numpy
+
         return neighbors, boundary, dx, store
 
     def external_setup(self, cfg):
@@ -92,8 +100,14 @@ class StdRes(Space):
 
         return tmp
 
-    def data_in_dir(self, data, dir, dist=1):
+    def _data_in_dir_numpy(self, data, dir, dist=1):
         n = self.neighbors[dir]
         for _ in range(dist-1):
             n = self.neighbors[dir][n]
         return data.T[n].T
+    
+    def _data_in_dir_torch(self, data, dir, dist=1):
+        n = self.neighbors[dir]
+        for _ in range(dist - 1):
+            n = self.neighbors[dir][n]
+        return data.t()[n].t()
