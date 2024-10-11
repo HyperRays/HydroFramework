@@ -1,5 +1,3 @@
-import matplotlib.pyplot as plt
-import matplotlib.patches as patches
 import numpy as np
 
 class TreeNode:
@@ -56,21 +54,6 @@ class TreeNode:
 
             return int(self.min_depth + (self.max_depth - self.min_depth) * (1 - normalized_dist))
 
-
-    def draw(self, ax, highlight_cells=None, color='r'):
-        # Draw node; highlight if it's in list of highlight_cells
-        if highlight_cells and self in highlight_cells:
-            rect = patches.Rectangle((self.x, self.y), self.width, self.height, linewidth=1, edgecolor='blue', facecolor='blue', alpha=0.5)
-            ax.add_patch(rect)
-        
-        if not self.is_divided:
-            rect = patches.Rectangle((self.x, self.y), self.width, self.height, linewidth=1, edgecolor=color, facecolor="none")
-            ax.add_patch(rect)
-        else:
-            for child in self.children:
-                child.draw(ax, highlight_cells, color)
-
-
     def find_max_depth(self):
         maxDepth = self.depth
         if not self.children:
@@ -108,22 +91,7 @@ class Tree:
         self.depth_formula = depth_formula
         self.root = TreeNode(0, 0, width, height, 0, min_depth, max_depth, depth_formula=self.depth_formula)
         self.max_depth = max_depth
-
-    # DISCLAIMER: ALL DRAWING LOGIC WAS DONE BY CHATGPT
-    def draw(self, highlight_cells=None):
-        fig, ax = plt.subplots()
-        ax.set_xlim(0, self.root.width)
-        ax.set_ylim(0, self.root.height)
-        ax.set_aspect("equal")
-
-        if highlight_cells is not None:
-            self.root.draw(ax, set(highlight_cells))
-        else:
-            self.root.draw(ax, highlight_cells)
-            
-        # plt.gca().invert_yaxis()  # Optional: Invert y-axis to match common graphics coordinate system
-        plt.show()
-
+        
     def find_point(self, position, nodeDepth=None):
         if nodeDepth is None:
             nodeDepth = self.max_depth

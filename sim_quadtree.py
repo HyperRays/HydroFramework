@@ -106,6 +106,11 @@ class Quadtree(Space):
         mask_n_ge_0 = n >= 0
         mask_n_lt_0 = n < 0
 
+        ### If values of the neighbors list are negative, they are pointing to a virtual node
+        ### In this case use the abs index - 1 to get a nodes list from the virtual list
+        ### then sum the values and pass on as 1 node (larger)
+        ### use masks to decide when to access the virtual list and which values are created by indirection  
+
         if np.any(mask_n_ge_0):
             n_ge_0 = n[mask_n_ge_0]
             depth_self = self.store["depth"][mask_n_ge_0]

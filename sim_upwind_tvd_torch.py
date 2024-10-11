@@ -1,11 +1,11 @@
 # pylint: disable=all
 # # Relaxing Upwind implementation in Python
 #
-# Authors: Daniel Iancu, Soham Kuvalekar
+# Authors: Soham Kuvalekar, Daniel Iancu
 # Date: 18/07/2024
 #
 # This program provides a TVD implementation of a relaxing Upwind
-# hydrodynamics simulation using numpy, to be used in an external
+# hydrodynamics simulation using torch, to be used in an external
 # framework
 #
 # Based on paper:
@@ -157,7 +157,7 @@ class Simulation:
     def compute_cfl(self, U):
         velocities = torch.abs(U[1:3] / U[0]).sum(0)  # Fluid velocity
 
-        # Calculate pressure using epsilon (internal energy density)
+        # Calculate pressure using epsilon (internal energy)
         epsilon = U[3] - 0.5 * (U[0] * velocities ** 2)
         P = (self.space.cfg.gamma - 1) * epsilon
         P = torch.maximum(P, torch.zeros_like(P))

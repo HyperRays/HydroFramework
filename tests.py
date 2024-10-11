@@ -18,12 +18,17 @@ from sim_grid import StdRes
 from sim_upwind_simple import Simulation as no_tvd_simulation
 from sim_upwind_tvd import Simulation as tvd_simulation
 
-from sim_upwind_simple_torch import Simulation as no_tvd_simulation_torch
-from sim_upwind_tvd_torch import Simulation as tvd_simulation_torch
+try:
+    a = 1/0
+    import torch
+    torch.set_num_threads(24)
 
-import torch
+    from sim_upwind_simple_torch import Simulation as no_tvd_simulation_torch
+    from sim_upwind_tvd_torch import Simulation as tvd_simulation_torch
 
-torch.set_num_threads(24)
+except:
+    print("torch not found")
+
 
 from gen_quadtree import (
     Tree,
@@ -196,10 +201,14 @@ def sedov_taylor_blast(res):
     )
 
     return cfg, target_time
+
 def EOS(res, 
         rl, ul, pl,
         rr, ur, pr, 
         t, gamma):
+    """
+    create configurations for Equations Of State
+    """
 
     target_time = t
 
@@ -342,38 +351,32 @@ def run_quad_res_tests(simulationf, resolutions, output_dir, do_no_iter, test, w
         logging.info(f"Simulation results saved to {save_name}")
 
 def main():
-    # Tests to do:
+    # Tests done:
+    # 32 -> 512
     # Blast:
-    # 1: 32 -> 512
-    # NO TVD/ TVD
-    #     STDRES / QUADTREE
+    #   NO TVD/ TVD
+    #       STDRES / QUADTREE
     # Tube:
-    # No TVD/TVD:
-    #   STDRES
-    # No TVD/TVD:
-    #   Quad: proper
-    #   Quad: faulty1
-    #   Quad: faulty2
+    #   No TVD/TVD:
+    #       STDRES
+    #   No TVD/TVD:
+    #       Quad: proper
+    #       Quad: faulty1
+    #       Quad: faulty2
 
     # Configure logging 
     logging.basicConfig(level=logging.INFO, format='%(asctime)s | %(levelname)s:%(module)s:%(funcName)s | %(message)s', filename=f"log.log")
-
-    step = 64
 
     width, height = 1, 1  # dimensions of entire area
     min_depth = 1
 
     start_depth = 5
     end_depth = 9
-    step = 64
 
-    do_no_iter = False
+    do_no_iter = True
 
     std_resolutions = [2**i for i in range(start_depth, end_depth+1)]
     quadtree_resolutions = [2**i for i in range(start_depth, end_depth+1)]
-    
-    # std_resolutions = [128]
-    # quadtree_resolutions = [128]
     
 
     if not os.path.exists("tests"):
@@ -382,27 +385,27 @@ def main():
 
     combinations = [
         # folder, space-type, resolutions, tvd/no-tvd, test, depth_func, torch
-        ## Blast
-        ### STDRES
-        # ["tests/std_blast_no_tvd", "std", std_resolutions, False, "blast", None, False],
+        # Blast
+        ## STDRES
+        ["tests/std_blast_no_tvd", "std", std_resolutions, False, "blast", None, False],
         ["tests/std_blast_tvd", "std", std_resolutions, True, "blast", None, False],
-        ### QUAD
-        # ["tests/quad_blast_no_tvd", "quad", quadtree_resolutions, False, "blast", depth_formula_sedov, False],
-        # ["tests/quad_blast_tvd", "quad", quadtree_resolutions, True, "blast", depth_formula_sedov, False],
+        ## QUAD
+        ["tests/quad_blast_no_tvd", "quad", quadtree_resolutions, False, "blast", depth_formula_sedov, False],
+        ["tests/quad_blast_tvd", "quad", quadtree_resolutions, True, "blast", depth_formula_sedov, False],
 
-        ## Tube
-        ### STDRES
-        # ["tests/std_tube_no_tvd", "std", std_resolutions, False, "tube", None, False],
-        # ["tests/std_tube_tvd", "std", std_resolutions, True, "tube", None, False],
-        ### QUAD: proper
-        # ["tests/quad_tube_no_tvd_proper", "quad", quadtree_resolutions, False, "tube", depth_formula_sod, False],
-        # ["tests/quad_tube_tvd_proper", "quad", quadtree_resolutions, True, "tube", depth_formula_sod, False],
-        ### QUAD: faulty1
-        # ["tests/quad_tube_no_tvd_faulty1", "quad", quadtree_resolutions, False, "tube", faulty1, False],
-        # ["tests/quad_tube_tvd_faulty1", "quad", quadtree_resolutions, True, "tube", faulty1, False],
-        ### QUAD: faulty2
-        # ["tests/quad_tube_no_tvd_faulty2", "quad", quadtree_resolutions, False, "tube", faulty2, False],
-        # ["tests/quad_tube_tvd_faulty2", "quad", quadtree_resolutions, True, "tube", faulty2, False],
+        # Tube
+        ## STDRES
+        ["tests/std_tube_no_tvd", "std", std_resolutions, False, "tube", None, False],
+        ["tests/std_tube_tvd", "std", std_resolutions, True, "tube", None, False],
+        ## QUAD: proper
+        ["tests/quad_tube_no_tvd_proper", "quad", quadtree_resolutions, False, "tube", depth_formula_sod, False],
+        ["tests/quad_tube_tvd_proper", "quad", quadtree_resolutions, True, "tube", depth_formula_sod, False],
+        ## QUAD: faulty1
+        ["tests/quad_tube_no_tvd_faulty1", "quad", quadtree_resolutions, False, "tube", faulty1, False],
+        ["tests/quad_tube_tvd_faulty1", "quad", quadtree_resolutions, True, "tube", faulty1, False],
+        ## QUAD: faulty2
+        ["tests/quad_tube_no_tvd_faulty2", "quad", quadtree_resolutions, False, "tube", faulty2, False],
+        ["tests/quad_tube_tvd_faulty2", "quad", quadtree_resolutions, True, "tube", faulty2, False],
     ]
 
 
@@ -452,18 +455,17 @@ def main():
 
 
         logging.info(log_text)
+
         #create file
         with open(f"{output_dir}/sim_info.txt","w+"): pass
 
         runf_space(*args)
 
-        # run_std_res_tests(std_resolutions, output_dir, do_no_iter, sod_shock_tube, std_times)
-        # run_quad_res_tests(quadtree_resolutions, output_dir, do_no_iter, sod_shock_tube, width, height, min_depth, quadtree_times, faulty2)
-
         # Save profiling times
         profiling_times_file = path.join(output_dir, "profiling_times.npz")
         np.savez_compressed(profiling_times_file, res=resolutions, times=times)
         logging.info(f"Profiling times saved to {profiling_times_file}")
+
 
 if __name__ == "__main__":
     main()
