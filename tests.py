@@ -19,7 +19,6 @@ from sim_upwind_simple import Simulation as no_tvd_simulation
 from sim_upwind_tvd import Simulation as tvd_simulation
 
 try:
-    a = 1/0
     import torch
     torch.set_num_threads(24)
 
