@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.1">
+<title>HydroFramework.gen_quadtree API documentation</title>
+<meta name="description" content="">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>HydroFramework.gen_quadtree</code></h1>
+</header>
+<section id="section-intro">
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="HydroFramework.gen_quadtree.find_boundary_leaf_nodes"><code class="name flex">
+<span>def <span class="ident">find_boundary_leaf_nodes</span></span>(<span>tree, c_l, max_resolution)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="HydroFramework.gen_quadtree.find_neighbors_by_direction"><code class="name flex">
+<span>def <span class="ident">find_neighbors_by_direction</span></span>(<span>node_index, direction, c_l, neighbors, virtual)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="HydroFramework.gen_quadtree.map_sqmatrix_to_quadtree"><code class="name flex">
+<span>def <span class="ident">map_sqmatrix_to_quadtree</span></span>(<span>max_resolution, tree, c_l)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="HydroFramework.gen_quadtree.write_boundaries_to_file"><code class="name flex">
+<span>def <span class="ident">write_boundaries_to_file</span></span>(<span>qt, c_l, max_resolution, file_name='boundary_data.txt')</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="HydroFramework.gen_quadtree.write_nodes_to_file"><code class="name flex">
+<span>def <span class="ident">write_nodes_to_file</span></span>(<span>leaf_list, neighbors_list, virtual_list, file_name='nodes_data.txt')</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="HydroFramework.gen_quadtree.write_sqmatrix_to_file"><code class="name flex">
+<span>def <span class="ident">write_sqmatrix_to_file</span></span>(<span>tree, leaf_list, max_resolution, file_name='sqmatrix_data.txt')</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="HydroFramework.gen_quadtree.Tree"><code class="flex name class">
+<span>class <span class="ident">Tree</span></span>
+<span>(</span><span>width, height, min_depth=10, max_depth=15, depth_formula=None)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Tree:
+    def __init__(self, width, height, min_depth=10, max_depth=15, depth_formula=None):
+        self.depth_formula = depth_formula
+        self.root = TreeNode(0, 0, width, height, 0, min_depth, max_depth, depth_formula=self.depth_formula)
+        self.max_depth = max_depth
+        
+    def find_point(self, position, nodeDepth=None):
+        if nodeDepth is None:
+            nodeDepth = self.max_depth
+        currentNode = self.root
+        c_pos = position
+        for _ in range(nodeDepth):  # search for node depth
+            if not currentNode.is_divided:  # end node found
+                break
+            
+            right = int(c_pos[0] &gt; 0.5)  # either 1 or 0
+            up = int(c_pos[1] &gt; 0.5)
+            index = (up &lt;&lt; 1) | right  # bit wise operator using OR --&gt; turning 0, 01, 10 and 11 into index
+            currentNode = currentNode.children[index]  # get current nodes child in found quadrant
+            c_pos = (c_pos[0]*2 - right, c_pos[1]*2 - up)
+            
+        maxDepth = currentNode.find_max_depth()
+        return currentNode, maxDepth
+
+    def generate_all_nodes(self):
+        child_l = []
+        virtual = []
+        neighbors = [
+            [],  # left
+            [],  # right
+            [],  # up
+            [],  # down
+        ]
+
+        # helper function: recursive search for leaf nodes
+        def child_func(node):
+            temp = []
+            for child in node.children:
+                if child.is_divided:
+                    temp += child_func(child)  # recursion
+                else:
+                    temp.append(child)  # leaf node
+            return temp
+
+        # takes array of leafs and returns each index in global list
+        def leaf_to_index(all_n_map, lst):
+            l_i = []
+            for n in lst:
+                l_i.append(all_n_map[n])
+            return l_i
+
+        child_l = child_func(self.root)  # initiate recursion
+        child_l_map = dict(zip(child_l,range(len(child_l))))
+
+        # loop through all leaf nodes to get pointers to neighbors
+        for child in child_l:  
+            neighbors_c = child.get_neighbors(self)
+            for dir_lst_idx in range(len(neighbors)):
+                if neighbors_c[dir_lst_idx] in child_l_map:
+                    neighbors[dir_lst_idx].append(child_l_map[neighbors_c[dir_lst_idx]])
+                else:
+                    # get all of leaf nodes of a neighbor in a direction
+                    neighbor_leaf_nodes = leaf_to_index(
+                        child_l_map, child_func(neighbors_c[dir_lst_idx])
+                    )
+                    # add that list of leaf nodes to virtual nodes list
+                    virtual.append(neighbor_leaf_nodes)
+                    # append negative index + 1 of virtual node (-(index + 1))
+                    neighbors[dir_lst_idx].append(-len(virtual))
+
+        return child_l, neighbors, virtual</code></pre>
+</details>
+<h3>Methods</h3>
+<dl>
+<dt id="HydroFramework.gen_quadtree.Tree.find_point"><code class="name flex">
+<span>def <span class="ident">find_point</span></span>(<span>self, position, nodeDepth=None)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="HydroFramework.gen_quadtree.Tree.generate_all_nodes"><code class="name flex">
+<span>def <span class="ident">generate_all_nodes</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+<dt id="HydroFramework.gen_quadtree.TreeNode"><code class="flex name class">
+<span>class <span class="ident">TreeNode</span></span>
+<span>(</span><span>x, y, width, height, depth=0, min_depth=10, max_depth=15, parent=None, depth_formula=None)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class TreeNode:
+    def __init__(self, x, y, width, height, depth=0, min_depth=10, max_depth=15, parent=None, depth_formula=None):
+        self.x = x
+        self.y = y
+        self.center_x = x + (width / 2)
+        self.center_y = y + (height / 2)
+        self.width = width
+        self.height = height
+        self.depth = depth
+        self.min_depth = min_depth
+        self.max_depth = max_depth
+        self.children = []
+        self.is_divided = False
+        self.parent = parent
+        self.depth_formula = depth_formula
+
+        self.subdivide()
+
+    def subdivide(self):
+        # subdivide based on proximity to center
+        if self.depth &lt; self.get_effective_max_depth():
+            half_width = self.width / 2
+            half_height = self.height / 2
+
+            self.children = [
+                TreeNode(self.x, self.y, half_width, half_height, self.depth + 1, self.min_depth, self.max_depth, self, self.depth_formula),  # top-left
+                TreeNode(self.x + half_width, self.y, half_width, half_height, self.depth + 1, self.min_depth, self.max_depth, self, self.depth_formula),  # top-right
+                TreeNode(self.x, self.y + half_height, half_width, half_height, self.depth + 1, self.min_depth, self.max_depth, self, self.depth_formula),  # bottom-left
+                TreeNode(self.x + half_width, self.y + half_height, half_width, half_height, self.depth + 1, self.min_depth, self.max_depth, self, self.depth_formula),  # bottom-right
+            ]
+
+            self.is_divided = True
+
+    def get_effective_max_depth(self):
+        if self.depth_formula:
+            # Use formula provided, which takes x, y, and max_depth as inputs
+            return max(
+                self.depth_formula(self.center_x       , self.center_y      , self.max_depth, self.min_depth),
+                self.depth_formula(self.x              , self.y             , self.max_depth, self.min_depth),
+                self.depth_formula(self.x + self.height, self.y             , self.max_depth, self.min_depth),
+                self.depth_formula(self.x              , self.y + self.width, self.max_depth, self.min_depth),
+                self.depth_formula(self.x + self.height, self.y + self.width, self.max_depth, self.min_depth),
+            )
+        else:
+            # default is proximity to center
+            center_x = width / 2  # system center
+            center_y = height / 2
+
+            dist_to_center = ((self.center_x - center_x) ** 2 + (self.center_y - center_y) ** 2) ** 0.5
+            max_dist = (center_x**2 + center_y**2) ** 0.5
+            normalized_dist = dist_to_center / max_dist
+
+            return int(self.min_depth + (self.max_depth - self.min_depth) * (1 - normalized_dist))
+
+    def find_max_depth(self):
+        maxDepth = self.depth
+        if not self.children:
+            return maxDepth
+
+        for child in self.children:
+            child_maxDepth = child.find_max_depth()
+            if child_maxDepth &gt; maxDepth:
+                maxDepth = child_maxDepth
+
+        return maxDepth
+
+    def get_neighbors(self, tree):
+        neighbors = [None, None, None, None]  # left, right, up, down
+        # define neighbor positions
+        neighbor_positions = [
+            [self.center_x - self.width, self.center_y],  # left
+            [self.center_x + self.width, self.center_y],  # right
+            [self.center_x, self.center_y + self.height],  # up
+            [self.center_x, self.center_y - self.height],  # down
+        ]
+
+        # find neighbor nodes using find_point()
+        for index, position in enumerate(neighbor_positions):
+            x = position[0] % tree.root.width
+            y = position[1] % tree.root.height
+            neighbor_node, _ = tree.find_point([x, y], self.depth)
+            neighbors[index] = neighbor_node
+
+        return neighbors</code></pre>
+</details>
+<h3>Methods</h3>
+<dl>
+<dt id="HydroFramework.gen_quadtree.TreeNode.find_max_depth"><code class="name flex">
+<span>def <span class="ident">find_max_depth</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="HydroFramework.gen_quadtree.TreeNode.get_effective_max_depth"><code class="name flex">
+<span>def <span class="ident">get_effective_max_depth</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="HydroFramework.gen_quadtree.TreeNode.get_neighbors"><code class="name flex">
+<span>def <span class="ident">get_neighbors</span></span>(<span>self, tree)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="HydroFramework.gen_quadtree.TreeNode.subdivide"><code class="name flex">
+<span>def <span class="ident">subdivide</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="HydroFramework" href="index.html">HydroFramework</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="HydroFramework.gen_quadtree.find_boundary_leaf_nodes" href="#HydroFramework.gen_quadtree.find_boundary_leaf_nodes">find_boundary_leaf_nodes</a></code></li>
+<li><code><a title="HydroFramework.gen_quadtree.find_neighbors_by_direction" href="#HydroFramework.gen_quadtree.find_neighbors_by_direction">find_neighbors_by_direction</a></code></li>
+<li><code><a title="HydroFramework.gen_quadtree.map_sqmatrix_to_quadtree" href="#HydroFramework.gen_quadtree.map_sqmatrix_to_quadtree">map_sqmatrix_to_quadtree</a></code></li>
+<li><code><a title="HydroFramework.gen_quadtree.write_boundaries_to_file" href="#HydroFramework.gen_quadtree.write_boundaries_to_file">write_boundaries_to_file</a></code></li>
+<li><code><a title="HydroFramework.gen_quadtree.write_nodes_to_file" href="#HydroFramework.gen_quadtree.write_nodes_to_file">write_nodes_to_file</a></code></li>
+<li><code><a title="HydroFramework.gen_quadtree.write_sqmatrix_to_file" href="#HydroFramework.gen_quadtree.write_sqmatrix_to_file">write_sqmatrix_to_file</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="HydroFramework.gen_quadtree.Tree" href="#HydroFramework.gen_quadtree.Tree">Tree</a></code></h4>
+<ul class="">
+<li><code><a title="HydroFramework.gen_quadtree.Tree.find_point" href="#HydroFramework.gen_quadtree.Tree.find_point">find_point</a></code></li>
+<li><code><a title="HydroFramework.gen_quadtree.Tree.generate_all_nodes" href="#HydroFramework.gen_quadtree.Tree.generate_all_nodes">generate_all_nodes</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="HydroFramework.gen_quadtree.TreeNode" href="#HydroFramework.gen_quadtree.TreeNode">TreeNode</a></code></h4>
+<ul class="">
+<li><code><a title="HydroFramework.gen_quadtree.TreeNode.find_max_depth" href="#HydroFramework.gen_quadtree.TreeNode.find_max_depth">find_max_depth</a></code></li>
+<li><code><a title="HydroFramework.gen_quadtree.TreeNode.get_effective_max_depth" href="#HydroFramework.gen_quadtree.TreeNode.get_effective_max_depth">get_effective_max_depth</a></code></li>
+<li><code><a title="HydroFramework.gen_quadtree.TreeNode.get_neighbors" href="#HydroFramework.gen_quadtree.TreeNode.get_neighbors">get_neighbors</a></code></li>
+<li><code><a title="HydroFramework.gen_quadtree.TreeNode.subdivide" href="#HydroFramework.gen_quadtree.TreeNode.subdivide">subdivide</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.1</a>.</p>
+</footer>
+</body>
+</html>
