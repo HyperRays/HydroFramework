@@ -27,7 +27,7 @@ If you want to visualize the data please use a tool like `jupyter` to open `Load
 
 ### Description of Files
 
-`config.py`: Contains a class to define any configuration \ 
+`config.py`: Contains a class to define any configuration \\ 
 `gen_quadtree`: Contains classes for a Quadtree as well as helper functions to flatten it \
 `LoadSave.ipynb`: Interactive python notebook to visualize the outputted data from the simulation runs \
 `quadtree_helper.py`: Contains helper functions to load a flattened quadtree \
