@@ -1,0 +1,12 @@
+numpy
+matplotlib
+scipy
+# if you want to run with torch
+
+# CPU only
+#torch 
+#torchvision 
+#torchaudio
+
+# CUDA required for GPU
+# follow instructions on torch website
