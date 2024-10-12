@@ -21,6 +21,8 @@ To get started, install the dependencies from `requirements.txt` using the comma
 pip install -r requirements.txt
 ```
 
+Documentation is provided under `docs`
+
 If you want to use torch simulations, please follow the instructions on the [PyTorch website](https://pytorch.org) to install it.
 
 ## Saves (Only Offline)
