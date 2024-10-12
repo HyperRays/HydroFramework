@@ -23,7 +23,7 @@ pip install -r requirements.txt
 
 If you want to use torch simulations, please follow the instructions on the [PyTorch website](https://pytorch.org) to install it.
 
-## Saves
+## Saves (Only Offline)
 
 Saves of various tests are provided in the `saves` folder. Please note that, other than `tests_final.7z`, none of the other saved tests are defined in `tests.py`.
 
