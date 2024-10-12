@@ -38,7 +38,7 @@ If you want to visualize the data please use a tool like `jupyter` to open `Load
 `sim_upwind_TVD.py`: A second-order implementation of upwind using TVD in numpy \
 `sim_upwind_TVD_torch.py`: torch implementation of `sim_TVD_simple.py` \
 `space.py`: Contains a base class for any space \
-`tests.py`: Contains the procedures for all test runs \
+`tests.py`: Contains the procedures for all test runs 
 
 ### Description of `test.py`
 
