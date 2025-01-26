@@ -18,15 +18,15 @@ from sim_grid import StdRes
 from sim_upwind_simple import Simulation as no_tvd_simulation
 from sim_upwind_tvd import Simulation as tvd_simulation
 
-try:
-    import torch
-    torch.set_num_threads(24)
+# try:
+#     import torch
+#     torch.set_num_threads(24)
 
-    from sim_upwind_simple_torch import Simulation as no_tvd_simulation_torch
-    from sim_upwind_tvd_torch import Simulation as tvd_simulation_torch
+#     from sim_upwind_simple_torch import Simulation as no_tvd_simulation_torch
+#     from sim_upwind_tvd_torch import Simulation as tvd_simulation_torch
 
-except:
-    print("torch not found")
+# except:
+#     print("torch not found")
 
 
 from gen_quadtree import (

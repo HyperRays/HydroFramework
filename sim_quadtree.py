@@ -4,7 +4,11 @@ from config import Config
 from os import path
 from space import Space
 from quadtree_helper import read_boundaries_from_file,read_nodes_from_file,read_sqmatrix_from_file
-import torch
+
+try:
+    import torch
+except:
+    pass
 
 class Quadtree(Space):
     """

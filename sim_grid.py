@@ -1,8 +1,12 @@
-# pylint: disable=import-error
+# pylint: disable=all
 from config import Config
 import numpy as np
 from space import Space
-import torch
+
+try:
+    import torch
+except:
+    pass
 
 class StdRes(Space):
     """
