@@ -7,3 +7,7 @@ __pycache__
 *.prof
 *.log
 saves
+wgpu-impl/Cargo.lock
+target/
+*.spv
+.github

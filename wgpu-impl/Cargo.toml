@@ -1,0 +1,12 @@
+[package]
+name = "wgpu-impl"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+bytemuck = "1.23.1"
+futures-intrusive = "0.5.0"
+futures-lite = "2.6.0"
+tokio = { version = "1.46.1", features = ["rt-multi-thread", "macros"] }
+wgpu = { version = "26.0.1", features = ["spirv"] }
+winit = "0.30.11"
